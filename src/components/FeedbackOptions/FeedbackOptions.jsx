@@ -3,21 +3,21 @@ import PropTypes from 'prop-types';
 import { Container, Button } from './FeedbackOptions.styled';
 
 const FeedbackOptions = ({
-  handleGoodIncrenemt,
-  handleNeutralIncrenemt,
-  handBadIncrenemt,
+  options,
+  onLeaveFeedback,
+
 }) => {
   return (
     <Container>
-      <Button type="button" onClick={handleGoodIncrenemt}>
-        good
-      </Button>
-      <Button type="button" onClick={handleNeutralIncrenemt}>
-        neutral
-      </Button>
-      <Button type="button" onClick={handBadIncrenemt}>
-        bad
-      </Button>
+      {Object.keys(options).map(button => (
+          <Button
+            key={button}
+            value={button}
+            type="button"
+            onClick={onLeaveFeedback}
+          >
+            {button}
+          </Button>))}
     </Container>
   );
 };
@@ -25,7 +25,10 @@ const FeedbackOptions = ({
 export default FeedbackOptions;
 
 FeedbackOptions.propTypes = {
-  handleGoodIncrenemt: PropTypes.func.isRequired,
-  handleNeutralIncrenemt: PropTypes.func.isRequired,
-  handBadIncrenemt: PropTypes.func.isRequired,
+  options: PropTypes.shape({
+    good: PropTypes.number.isRequired,
+    neutral: PropTypes.number.isRequired,
+    bad: PropTypes.number.isRequired,
+  }),
+  onLeaveFeedback: PropTypes.func.isRequired,
 };

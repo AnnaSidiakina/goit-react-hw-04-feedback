@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState} from 'react';
 import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
 import Statistics from './Statistics/Statistics';
 import Section from './Section/Section';
@@ -8,51 +8,43 @@ function App() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const [total, seTotal] = useState(0);
-  const [positive, setPositive] = useState(0);
 
-  const handleGoodIncrenemt = () => {
-    setGood(state => state + 1);
-  };
 
-  const handleNeutralIncrenemt = () => {
-    setNeutral(state => state + 1);
-  };
+  const onLeaveFeedback = e => {
+    const button = e.currentTarget.value;
+    switch(button) {
+      case 'good':
+        setGood(prevGood => prevGood + 1);
+        break;
 
-  const handBadIncrenemt = () => {
-    setBad(state => state + 1);
-  };
+        case 'neutral': 
+        setNeutral(prevNeutral => prevNeutral + 1);
+        break;
 
-  useEffect(() => {
-    const total = good + neutral + bad;
-    seTotal(total);
-    const positive = Math.round((good * 100) / total);
-    console.log(positive);
-    setPositive(positive);
-  }, [good, neutral, bad]);
+        case 'bad':
+          setBad(prevBad => prevBad + 1);
+          break;
 
-  function onShow() {
-    if (good === 0 && neutral === 0 && bad === 0) {
-      return true;
-    } else {
-      return false;
+          default: return;
     }
-  }
+  };
+
+    const total = () => { return good + neutral + bad;}; 
+    const positive = () => {return Math.round((good * 100) / total());} 
+  
 
   return (
     <>
       <Section title="Please leave feedback">
         <FeedbackOptions
-          handleGoodIncrenemt={handleGoodIncrenemt}
-          handleNeutralIncrenemt={handleNeutralIncrenemt}
-          handBadIncrenemt={handBadIncrenemt}
+          options={{ good, neutral, bad }}
+          onLeaveFeedback={onLeaveFeedback}
+          
         />
       </Section>
 
       <Section title="Statistics">
-        {onShow() ? (
-          <Notification message="There is no feedback" />
-        ) : (
+        {total() ? (
           <Statistics
             good={good}
             neutral={neutral}
@@ -60,6 +52,8 @@ function App() {
             total={total}
             positive={positive}
           />
+        ) : (
+          <Notification message="There is no feedback" />
         )}
       </Section>
     </>
